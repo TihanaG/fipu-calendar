@@ -3,8 +3,9 @@ import { Event } from './Event';
 
 const CellWrap = styled.div`
     // background-color: var(--white); // for all cells
-    background-color: ${props => props.isSelected ? 'var(--primary-500)' : 'var(--white)'};
-    border-radius: ${props => props.isSelected ? '10px' : ''};
+    // background-color: ${props => props.isSelected ? 'var(--primary-500)' : 'var(--white)'};
+    // background-color: ${props => (props.isSunday || props.isSaturday) ? 'none;' : 'var(--white);'};
+    // border-radius: ${props => props.isSelected ? '10px' : ''};
     color: ${props => props.isSelected
         ? 'var(--white)'
         : props.isToday && props.isInCurrentMonth
@@ -27,11 +28,15 @@ const CellWrap = styled.div`
 `;
 
 const Circle = styled.div`
-    background-color: ${props => props.isToday && props.isInCurrentMonth
-        ? 'var(--primary-500)'
-        : props.isToday && !props.isInCurrentMonth
-            ? 'var(--grey-100)'
-            : 'transparent'};
+    background-color: ${props => props.isToday && props.isInCurrentMonth && props.isSelected
+        ? 'var(--primary-400)'
+        : !props.isToday && props.isInCurrentMonth && props.isSelected
+            ? 'var(--primary-400)'
+            : props.isToday && props.isInCurrentMonth && !props.isSelected
+                ? 'var(--primary-500)'
+                : props.isToday && !props.isInCurrentMonth
+                    ? 'var(--grey-100)'
+                    : 'transparent'};
     color: ${props => props.isToday && props.isInCurrentMonth
         ? 'var(--white)'
         : props.isInCurrentMonth
@@ -54,12 +59,14 @@ export const EventCell = ({
 }) => {
     return (
         <CellWrap
-            isSelected={isSelected}
+            isSunday={isSunday}
+            // isSelected={isSelected}
             isInCurrentMonth={isInCurrentMonth}
         >
             <Circle
                 isToday={isToday}
                 isInCurrentMonth={isInCurrentMonth}
+                isSelected={isSelected}
             >
                 {dateNumber}
             </Circle>

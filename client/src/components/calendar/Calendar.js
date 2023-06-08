@@ -131,7 +131,7 @@ const CalendarCellWrap = styled.div`
     background-color: ${props => (props.isSunday || props.isSaturday) ? 'none;' : 'var(--white);'};
 `;
 
-const Cell = styled.div`
+/*const Cell = styled.div`
   // background-color: var(--white);
   background-color: ${props => (props.isSunday || props.isSaturday) ? '#eee;' : 'var(--white);'};
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -144,7 +144,7 @@ const Cell = styled.div`
   :hover {
     background-color: #eee;
   }
-`;
+`;*/
 
 // month, year instead currentMonthMoment kako bi bilo reusable
 export const Calendar = ({
@@ -156,7 +156,7 @@ export const Calendar = ({
   setToday,
   getCellProps,
   cellComponent: CellComponent,
-  showAddButton = false,
+  // showAddButton = false,
 }) => {
   // ovo je vezano za propse u Calendar
   const currentMonthMoment = moment(`${month}${year}`, 'MMYYYY')
@@ -179,11 +179,11 @@ export const Calendar = ({
             <FaChevronRight className='right' onClick={onNext} />
             <button className='today-btn' onClick={setToday}>Today</button>
           </CalendarControls>
-          {showAddButton && (
+          {/*showAddButton && (
             <div className='add-events'>
               <button className='add-events-btn'>+ Add</button>
             </div>
-          )}
+          )*/}
         </CalendarControlsWrap>
 
         <CalendarTable>
@@ -209,6 +209,7 @@ export const Calendar = ({
                         dayMoment.format('YYYY'),
                       )}>
                       <CellComponent
+                        isSunday={isSunday}
                         dateNumber={dayMoment.format('D')}
                         isInCurrentMonth={dayMoment.isSame(currentMonthMoment, 'month')}
                         {...getCellProps(dayMoment)}

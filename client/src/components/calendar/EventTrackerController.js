@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import moment from 'moment'
 // import { saveAs } from 'file-saver'
 import { Calendar } from "./Calendar"
@@ -14,6 +14,7 @@ export const EventTrackerController = () => {
     const [selectedDate, setSelectedDate] = useState(null)
     const [selectedDates, setSelectedDates] = useState([])
     const [selectMoreMode, setselectMoreMode] = useState(true) // 'selectMore' or 'selectOne'
+    const [showAddButton, setShowAddButton] = useState(false)
 
     const { user } = useAppContext()
 
@@ -28,8 +29,6 @@ export const EventTrackerController = () => {
     const today = moment()
     const [currentMonthMoment, setCurrentMonthMoment] = useState(today)
 
-    const [showAddButton,] = useState(false);
-
     const incrementMonth = () => {
         setCurrentMonthMoment(moment(currentMonthMoment.add(1, 'months')))
     }
@@ -42,7 +41,9 @@ export const EventTrackerController = () => {
         setCurrentMonthMoment(today)
     }
 
-    const createNewEvent = (eventName, eventColor) => {
+    //const createNewEvent = (eventName, eventColor) => { }
+
+    const createNewEvents = (eventName, eventColor) => {
         const newEvent = {
             name: eventName,
             date: selectedDate,
@@ -54,30 +55,27 @@ export const EventTrackerController = () => {
         setSelectedDate(null)
     }
 
-    /*const createAllRad = () => {
-        const daysInMonth = currentMonthMoment.daysInMonth();
-        const startOfMonth = moment(currentMonthMoment).startOf('month');
-
-        const newEvents = [];
-
-        for (let i = 0; i < daysInMonth; i++) {
-            const date = moment(startOfMonth).add(i, 'days');
-            const dayOfWeek = date.day();
-
-            // Skip Saturdays (6) and Sundays (0)
-            if (dayOfWeek !== 6 && dayOfWeek !== 0) {
-                const newEvent = {
-                    name: options[0].label,
-                    date: date,
-                    color: options[0].color,
-                };
-                newEvents.push(newEvent);
-            }
+    const createNewEvent = (eventName, eventColor) => {
+        if (!selectMoreMode) {
+            const newEvents = selectedDates.map(date => ({
+                name: eventName,
+                date: date,
+                color: eventColor,
+            }));
+            setEvents([...events, ...newEvents]);
+        } else {
+            const newEvent = {
+                name: eventName,
+                date: selectedDate,
+                color: eventColor,
+            };
+            setEvents([...events, newEvent]);
         }
+        setShowNewEventModal(false);
+        setSelectedDates([]);
+    };
 
-        setEvents([...events, ...newEvents]);
-        setSelectedDate(null);
-    };*/
+
 
     const createAllRad = () => {
         const daysInMonth = currentMonthMoment.daysInMonth();
@@ -104,7 +102,7 @@ export const EventTrackerController = () => {
         }
 
         setEvents([...events, ...newEvents]);
-        setSelectedDate(null);
+        // setSelectedDate(null);
     };
 
     const clearAll = () => {
@@ -115,7 +113,8 @@ export const EventTrackerController = () => {
 
     const displayModal = (date, month, year) => {
         // console.log({ date, month, year })
-        setSelectedDate(moment(`${date}${month}${year}`, 'DDMMYYYY'))
+        selectMoreMode && setSelectedDate(moment(`${date}${month}${year}`, 'DDMMYYYY'))
+
         setShowNewEventModal(true)
     }
 
@@ -166,13 +165,17 @@ export const EventTrackerController = () => {
         XLSX.writeFile(workbook, fileName);
     };
 
+    useEffect(() => {
+        setShowAddButton(selectedDates.length > 0);
+    }, [selectedDates]);
+
     return (
         <>
             <Modal
                 shouldShow={showNewEventModal}
                 onRequestClose={() => setShowNewEventModal(false)}
             >
-                <h3>{selectedDate && selectedDate.format('DD. MMM YYYY')}</h3>
+                {/*<h3>{selectedDate && selectedDate.format('DD. MMM YYYY')}</h3>*/}
                 <NewEventForm
                     createNewEvent={createNewEvent}
                     options={options}
@@ -185,6 +188,9 @@ export const EventTrackerController = () => {
                 : <button onClick={selectOne}>Select One</button>
             }
             <button onClick={exportEventsToExcel}>Export to Excel</button>
+            {showAddButton && selectedDates && (
+                <button className='add-events-btn' onClick={displayModal}>+ Add</button>
+            )}
 
             {/* events={events} in calendar is removed
             getCellProps instead */}
