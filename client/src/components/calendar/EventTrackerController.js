@@ -89,10 +89,12 @@ export const EventTrackerController = () => {
         }
 
         setEvents([...events, ...newEvents]);
-        // setSelectedDate(null);
+        setSelectedDate(null);
+        setSelectedDates([]);
     };
 
     const clearAll = () => {
+        setSelectedDates([])
         const filteredEvents = events.filter(event => !event.date.isSame(currentMonthMoment, 'month'));
         setEvents(filteredEvents);
     }

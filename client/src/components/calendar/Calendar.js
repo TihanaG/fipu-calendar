@@ -89,7 +89,7 @@ const CalendarControls = styled.div`
 
   @media (hover: hover){
     .today-btn:hover {
-      background: #eee;
+      background: var(--grey-50);
       // color: var(--text-color);
     }
   }
