@@ -7,13 +7,14 @@ import { NewEventForm } from './NewEventForm'
 import { EventCell } from './EventCell';
 import * as XLSX from 'xlsx'
 import { useAppContext } from '../../context/appContext'
+import CalendarMenu from './CalendarMenu'
 
 export const EventTrackerController = () => {
     const [events, setEvents] = useState([])
     const [showNewEventModal, setShowNewEventModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null)
     const [selectedDates, setSelectedDates] = useState([])
-    const [selectMoreMode, setselectMoreMode] = useState(true) // 'selectMore' or 'selectOne'
+    const [selectMoreMode, setSelectMoreMode] = useState(true) // 'selectMore' or 'selectOne'
     const [showAddButton, setShowAddButton] = useState(false)
 
     const { user } = useAppContext()
@@ -39,20 +40,6 @@ export const EventTrackerController = () => {
 
     const setToday = () => {
         setCurrentMonthMoment(today)
-    }
-
-    //const createNewEvent = (eventName, eventColor) => { }
-
-    const createNewEvents = (eventName, eventColor) => {
-        const newEvent = {
-            name: eventName,
-            date: selectedDate,
-            color: eventColor,
-        }
-        setEvents([...events, newEvent])
-        // setEvents(events.concat({ eventName, date: selectedDate }))
-        setShowNewEventModal(false)
-        setSelectedDate(null)
     }
 
     const createNewEvent = (eventName, eventColor) => {
@@ -131,7 +118,7 @@ export const EventTrackerController = () => {
     }
 
     const selectOne = () => {
-        setselectMoreMode(true)
+        setSelectMoreMode(true)
         setSelectedDates([])
     }
 
@@ -181,16 +168,17 @@ export const EventTrackerController = () => {
                     options={options}
                 />
             </Modal>
-            {<button onClick={createAllRad}>Select all</button>}
-            <button onClick={clearAll}>Clear all</button>
-            {selectMoreMode
-                ? <button onClick={() => setselectMoreMode(false)}>Select More</button>
-                : <button onClick={selectOne}>Select One</button>
-            }
-            <button onClick={exportEventsToExcel}>Export to Excel</button>
-            {showAddButton && selectedDates && (
-                <button className='add-events-btn' onClick={displayModal}>+ Add</button>
-            )}
+            <CalendarMenu
+                createAllRad={createAllRad}
+                selectMoreMode={selectMoreMode}
+                setSelectMoreMode={setSelectMoreMode}
+                selectOne={selectOne}
+                clearAll={clearAll}
+                exportEventsToExcel={exportEventsToExcel}
+                showAddButton={showAddButton}
+                selectedDates={selectedDates}
+                displayModal={displayModal}
+            />
 
             {/* events={events} in calendar is removed
             getCellProps instead */}

@@ -21,7 +21,7 @@ const CellWrap = styled.div`
     transition: var(--transition);
 
     :hover {
-        background-color: ${props => props.isSelected ? 'var(--primary-700)' : '#eee'};
+        background-color: ${props => props.isSelected ? 'var(--primary-700)' : 'var(--grey-50)'};
         border-radius: ${props => props.isSelected ? '10px' : ''};
         cursor: pointer;
     }
