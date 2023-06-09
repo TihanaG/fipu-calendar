@@ -156,6 +156,7 @@ export const Calendar = ({
   setToday,
   getCellProps,
   cellComponent: CellComponent,
+  children,
   // showAddButton = false,
 }) => {
   // ovo je vezano za propse u Calendar
@@ -179,13 +180,13 @@ export const Calendar = ({
             <FaChevronRight className='right' onClick={onNext} />
             <button className='today-btn' onClick={setToday}>Today</button>
           </CalendarControls>
+          {children && children(getCellProps)}
           {/*showAddButton && (
             <div className='add-events'>
               <button className='add-events-btn'>+ Add</button>
             </div>
           )*/}
         </CalendarControlsWrap>
-
         <CalendarTable>
           <CalendarHeading>
             {daysOfTheWeek.map(day => <CalendarHeadingCell key={day}>{day}</CalendarHeadingCell>)}

@@ -7,7 +7,7 @@ import { NewEventForm } from './NewEventForm'
 import { EventCell } from './EventCell';
 import * as XLSX from 'xlsx'
 import { useAppContext } from '../../context/appContext'
-import CalendarMenu from './CalendarMenu'
+import { CalendarMenu } from './CalendarMenu'
 
 export const EventTrackerController = () => {
     const [events, setEvents] = useState([])
@@ -168,30 +168,22 @@ export const EventTrackerController = () => {
                     options={options}
                 />
             </Modal>
-            <CalendarMenu
-                createAllRad={createAllRad}
-                selectMoreMode={selectMoreMode}
-                setSelectMoreMode={setSelectMoreMode}
-                selectOne={selectOne}
-                clearAll={clearAll}
-                exportEventsToExcel={exportEventsToExcel}
-                showAddButton={showAddButton}
-                selectedDates={selectedDates}
-                displayModal={displayModal}
-            />
+
 
             {/* events={events} in calendar is removed
             getCellProps instead */}
             <Calendar
                 getCellProps={(dayMoment) => {
-                    const eventsForDay = events.filter(event => {
-                        return event.date.isSame(dayMoment, 'day')
-                    })
+                    const eventsForDay = events.filter((event) => {
+                        return event.date.isSame(dayMoment, 'day');
+                    });
                     return {
-                        isSelected: selectedDates.some(selectedDate => selectedDate.isSame(dayMoment, 'date')),
+                        isSelected: selectedDates.some((selectedDate) =>
+                            selectedDate.isSame(dayMoment, 'date')
+                        ),
                         isToday: dayMoment.isSame(today, 'day'),
                         events: eventsForDay,
-                    }
+                    };
                 }}
                 onCellClicked={selectMoreMode ? displayModal : onDateSelected}
                 month={currentMonthMoment.format('MM')}
@@ -201,7 +193,23 @@ export const EventTrackerController = () => {
                 setToday={setToday}
                 cellComponent={EventCell}
                 showAddButton={showAddButton}
-            />
+            >
+                {(getCellProps) => (
+                    <CalendarMenu
+                        createAllRad={createAllRad}
+                        selectMoreMode={selectMoreMode}
+                        setSelectMoreMode={setSelectMoreMode}
+                        selectOne={selectOne}
+                        clearAll={clearAll}
+                        exportEventsToExcel={exportEventsToExcel}
+                        showAddButton={showAddButton}
+                        selectedDates={selectedDates}
+                        displayModal={displayModal}
+                        getCellProps={getCellProps}
+                    />
+                )}
+            </Calendar>
+
             <p>{selectedDates.map(date => date.format('DD/MM/YYYY')).join(', ')}</p>
         </>
 

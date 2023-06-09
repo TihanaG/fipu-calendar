@@ -1,6 +1,6 @@
 import { BiSelectMultiple } from 'react-icons/bi'
 
-const CalendarMenu = ({
+export const CalendarMenu = ({
     createAllRad,
     selectMoreMode,
     setSelectMoreMode,
@@ -29,4 +29,3 @@ const CalendarMenu = ({
         </div>
     )
 }
-export default CalendarMenu
